@@ -1,35 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Metronome</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Metronome</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div class="title">Simple Metronome</div>
-    <button id="play-button" class="">
-        <div id="play-pause-icon" class="play"></div>
-    </button>
+  <div class="title">Simple Metronome</div>
+  <button id="play-button" class="">
+    <div id="play-pause-icon" class="play"></div>
+  </button>
 
-    <div class="tempo-controls">
-        <button class="tempo-change" data-change="-5">-5</button>
-        <button class="tempo-change" data-change="-1">-</button>
-
-        <div class="tempo-container">
-            <div id="tempo">120</div>
-            <div class="bpm">bpm</div>
-        </div>
-
-        <button class="tempo-change" data-change="+1">+</button>
-        <button class="tempo-change" data-change="+5">+5</button>
+  <div id="time-display">
+    <div class="field-group">
+      <label for="time-display-bars">Bars:</label>
+      <div id="time-display-bars" name="time-display-bars">0</div>
     </div>
 
-    <div class="created-by">
-        Created by <a href="https://grantjam.es" target="_blank">Grant James</a>
+    <div class="field-group">
+      <label for="time-display-beats">Beats:</label>
+      <div id="time-display-beats" name="time-display-beats">0</div>
     </div>
 
-    <script src="metronome.js"></script>
-    <script src="app.js"></script>
+    <div class="field-group">
+      <label for="time-display-seconds">Seconds:</label>
+      <div id="time-display-seconds" name="time-display-seconds">0</div>
+    </div>
+
+
+  </div>
+
+  <div id="beat-stepper">
+    <div class="beat-step" id="b0"></div>
+    <div class="beat-step" id="b1"></div>
+    <div class="beat-step" id="b2"></div>
+    <div class="beat-step" id="b3"></div>
+  </div>
+
+  <div class="tempo-controls">
+    <button class="tempo-change" data-change="-5">-5</button>
+    <button class="tempo-change" data-change="-1">-</button>
+
+    <div class="tempo-container">
+      <div id="tempo">120</div>
+      <div class="bpm">bpm</div>
+    </div>
+
+    <button class="tempo-change" data-change="+1">+</button>
+    <button class="tempo-change" data-change="+5">+5</button>
+  </div>
+
+
+  <script src="metronome.js"></script>
+  <script src="app.js"></script>
 </body>
+
 </html>
