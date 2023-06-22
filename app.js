@@ -1,14 +1,16 @@
-var metronome = new Metronome(120, 4);
+import { Metronome } from './metronome.js';
+
+const metronome = new Metronome(120, 4);
 
 window.metronome = metronome
 
-var tempo = document.getElementById('tempo');
+const tempo = document.getElementById('tempo');
 
 tempo.textContent = metronome.tempo;
 
-var playPauseIcon = document.getElementById('play-pause-icon');
+const playPauseIcon = document.getElementById('play-pause-icon');
 
-var playButton = document.getElementById('play-button');
+const playButton = document.getElementById('play-button');
 
 playButton.addEventListener('click', function() {
   metronome.startStop();
@@ -23,7 +25,7 @@ playButton.addEventListener('click', function() {
 
 var tempoChangeButtons = document.getElementsByClassName('tempo-change');
 
-for (var i = 0; i < tempoChangeButtons.length; i++) {
+for (let i = 0; i < tempoChangeButtons.length; i++) {
   tempoChangeButtons[i].addEventListener('click', function() {
     metronome.tempo += parseInt(this.dataset.change);
     tempo.textContent = metronome.tempo;
@@ -31,7 +33,8 @@ for (var i = 0; i < tempoChangeButtons.length; i++) {
 }
 
 const barDisplay = document.querySelector('#time-display-bars');
-const beatDisplay = document.querySelector('#time-display-beats');
+const barBeatDisplay = document.querySelector('#time-display-bar-beat');
+const totalBeatsDisplay = document.querySelector('#time-display-total-beats');
 const secondsDisplay = document.querySelector('#time-display-seconds');
 
 
@@ -39,12 +42,14 @@ const beatStepper = document.querySelector('#beat-stepper');
 let currentBeatStep = null;
 let lastBeat = null;
 
+
 const updateUI = (state) => {
-  const { bar, beat, time, nextNote } = state
+  const { bar, beat, totalBeats, time, nextNote } = state
   let adjustedTime = time.toFixed(2);
 
   barDisplay.textContent = bar;
-  beatDisplay.textContent = beat;
+  barBeatDisplay.textContent = beat;
+  totalBeatsDisplay.textContent = totalBeats;
   secondsDisplay.textContent = adjustedTime // time.toFixed(2);
 
   if (currentBeatStep instanceof HTMLElement) {
@@ -58,16 +63,16 @@ const updateUI = (state) => {
 
 const startLoop = () => {
   let beat;
-  
-  while (metronome.beatQueue.length && metronome.beatQueue[0].time < metronome.currentTime) {
-    beat = metronome.beatQueue[0];
-    metronome.beatQueue.shift(); // Remove note from queue
+
+  while (metronome.scheduledBeats.length && metronome.scheduledBeats[0].time < metronome.currentTime) {
+    beat = metronome.scheduledBeats[0];
+    metronome.scheduledBeats.shift(); // Remove note from queue
   }
 
   if (beat && lastBeat !== beat) {
     updateUI(beat)
   }
-  
+
   requestAnimationFrame(startLoop)
 };
 

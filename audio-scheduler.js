@@ -1,4 +1,4 @@
-export class Metronome extends EventTarget {
+class AudioScheduler extends EventTarget {
   audioContext = null;
   scheduledBeats = []; // notes that have been put into the web audio and may or may not have been played yet {note, time}
   currentBeatInBar = 0;
@@ -12,7 +12,6 @@ export class Metronome extends EventTarget {
   tempo = 120;
   beatsPlayed = 0
   latencyCompensation = 0.08
-  latency = 0;
 
   constructor(tempo = 120, beatsPerBar = 4, latencyCompensation) {
     super();
@@ -57,7 +56,7 @@ export class Metronome extends EventTarget {
       bar: this.currentBar,
       beat: this.currentBeatInBar,
       totalBeats: this.beatsPlayed,
-      time: this.currentTime,// + this.latency,
+      time: this.currentTime,
       nextNote: this.nextBeatTime
     });
 
@@ -78,10 +77,7 @@ export class Metronome extends EventTarget {
     // while there are notes that will need 
     // to play before the next interval, 
     // schedule them and advance the pointer.
-    
 
-    this.latency = (this.audioContext.baseLatency + this.audioContext.outputLatency) * this.beatsPerBar;
-    
     while (this.nextBeatTime < this.currentTime + this.scheduleAheadTime) {
       this.scheduleNote(this.currentBeatInBar, this.nextBeatTime);
       this.advanceBeat();
@@ -105,15 +101,15 @@ export class Metronome extends EventTarget {
   start() {
     if (this.isRunning) return;
 
-    this.audioContext = new window.AudioContext();
-    // this.latency = (this.audioContext.baseLatency + this.audioContext.outputLatency) * this.beatsPerBar;
+    this.audioContext = new AudioContext();
+
 
     this.currentBar = 0;
     this.beatsPlayed = 0;
     this.currentBeatInBar = 0;
-
-    this.nextBeatTime = this.currentTime + this.latencyCompensation + this.audioContext.baseLatency //0.08;
     this.isRunning = true;
+
+    this.nextBeatTime = this.currentTime + this.latencyCompensation //0.08;
 
     this.scheduler();
   }
@@ -122,7 +118,9 @@ export class Metronome extends EventTarget {
     this.isRunning = false;
 
     clearTimeout(this.schedulerID);
-
+    
+    this.audioContext.suspend();
+    
     this.schedulerID = null;
   }
 
